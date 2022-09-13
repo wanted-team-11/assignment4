@@ -1,25 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// set routes (issue-list, issue-detail)
+// when clicked the issue item, go to the detail page
+// issue detail page
+// detail page should show data (console would be suffice)
+// 업무 나누기 하자!!
+import { Routes, Route } from "react-router-dom";
+import IssueListPage from "./pages/IssueListPage";
+import IssueDetailPage from "./pages/IssueDetailPage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={<IssueListPage />} />
+      <Route path="issue-detail/:number" element={<IssueDetailPage />} />
+    </Routes>
   );
 }
 
