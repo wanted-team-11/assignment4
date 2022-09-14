@@ -6,9 +6,9 @@ const Header = () => {
   const { getListByPageNumber, issueList, isLoading } =
     useContext(AssignmentContext);
 
-  useEffect(() => {
-    getListByPageNumber("1");
-  }, []);
+  // useEffect(() => {
+  //   getListByPageNumber("1");
+  // }, []);
 
   console.log(issueList);
 
