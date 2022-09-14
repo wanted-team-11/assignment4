@@ -41,21 +41,22 @@ const IssueDetailPage = () => {
                 {new Date(created_at || "").getDate()}일
               </S_Describe>
             </div>
-<<<<<<< HEAD
             <S_Comment>코멘트: {comments}</S_Comment>
           </S_Wrapper>
-          <div>{body}</div>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            skipHtml={true}
+            components={{
+              code: ({ node, ...props }) => (
+                <S_CodeWrapper>
+                  <code {...props} />
+                </S_CodeWrapper>
+              ),
+            }}
+          >
+            {body || ""}
+          </ReactMarkdown>
         </S_Container>
-=======
-            <div>코멘트: {issueDetail?.comments}</div>
-          </Wrapper>
-          {issueDetail && (
-            <ReactMarkdown remarkPlugins={[remarkGfm]} skipHtml={true}>
-              {issueDetail.body}
-            </ReactMarkdown>
-          )}
-        </Container>
->>>>>>> 34cb490658978f7b0000f1ef86e90d3df881d873
       )}
       ;
     </>
@@ -109,4 +110,10 @@ const S_Comment = styled.div`
   font-size: 12px;
   width: 70px;
   flex-shrink: 0;
+`;
+
+const S_CodeWrapper = styled.div`
+  background-color: #f6f8fa;
+  overflow: auto;
+  padding: 16px;
 `;
