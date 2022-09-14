@@ -1,6 +1,6 @@
-import { useState, createContext, useEffect, ReactNode } from "react";
+import { useState, createContext, ReactNode } from "react";
 import { Issue } from "../types";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 const API_TOKEN = process.env.REACT_APP_API_TOKEN;
 
@@ -46,37 +46,15 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
   const getListByPageNumber = async (pageNumber: string) => {
     try {
       setIsLoading(true);
-      const data = (await axiosInstance.get(
+      const response = await axiosInstance.get(
         `issues?sort=comments&page=${pageNumber}`
-        ///repos/{owner}/{repo}/issues/{issue_number}
-      )) as Issue[];
+      );
+      setIssueList(response.data);
     } catch (e) {
     } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    axiosInstance.interceptors.request.use(
-      (config) => {
-        setIsLoading(true);
-        return { ...config, headers: { Authorization: `Bearer ${API_TOKEN}` } };
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-
-    axiosInstance.interceptors.response.use(
-      (response: AxiosResponse<Issue[]>) => {
-        setIsLoading(false);
-        setIssueList(response.data);
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-  }, []);
 
   const value = {
     isLoading,
