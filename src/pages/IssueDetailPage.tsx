@@ -6,8 +6,11 @@ import { AssignmentContext } from "../context";
 
 const IssueDetailPage = () => {
   const { number } = useParams();
+
   const { getIssueDetail, issueDetail, isLoading } =
     useContext(AssignmentContext);
+
+  const { user, title, created_at, comments, body } = issueDetail || {};
 
   useEffect(() => {
     if (number) {
@@ -18,26 +21,28 @@ const IssueDetailPage = () => {
   return (
     <>
       {isLoading ? (
-        <LoadingContainer>
-          <LoadingImage src={Spinner} />
-        </LoadingContainer>
+        <S_LoadingContainer>
+          <S_LoadingImage src={Spinner} />
+        </S_LoadingContainer>
       ) : (
-        <Container>
-          <Wrapper>
-            <Avatar src={issueDetail?.user.avatar_url} alt="avatar" />
+        <S_Container>
+          <S_Wrapper>
+            <S_Avatar src={user?.avatar_url} alt="avatar" />
             <div>
-              <div>
-                #{issueDetail?.number} {issueDetail?.title}
-              </div>
-              <div>
-                작성자: {issueDetail?.user.login}, 작성일:{" "}
-                {issueDetail?.created_at}
-              </div>
+              <S_Title>
+                #{number} {title}
+              </S_Title>
+              <S_Describe>
+                작성자: {user?.login}, 작성일:{" "}
+                {new Date(created_at || "").getFullYear()}년{" "}
+                {new Date(created_at || "").getMonth() + 1}월{" "}
+                {new Date(created_at || "").getDate()}일
+              </S_Describe>
             </div>
-            <div>코멘트: {issueDetail?.comments}</div>
-          </Wrapper>
-          <div>{issueDetail?.body}</div>
-        </Container>
+            <S_Comment>코멘트: {comments}</S_Comment>
+          </S_Wrapper>
+          <div>{body}</div>
+        </S_Container>
       )}
       ;
     </>
@@ -46,31 +51,49 @@ const IssueDetailPage = () => {
 
 export default IssueDetailPage;
 
-const LoadingContainer = styled.div`
+const S_LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 `;
 
-const LoadingImage = styled.img`
+const S_LoadingImage = styled.img`
   width: 150px;
   height: 150px;
 `;
 
-const Container = styled.div`
+const S_Container = styled.div`
   max-width: 768px;
   margin: 0 auto;
-  padding: 0 1.3rem;
 `;
 
-const Avatar = styled.img`
-  width: 50px;
-`;
-
-const Wrapper = styled.div`
+const S_Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 10px;
   border-bottom: 1px solid black;
+`;
+
+const S_Avatar = styled.img`
+  width: 50px;
+  margin-right: 10px;
+`;
+
+const S_Title = styled.div`
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+`;
+
+const S_Describe = styled.div`
+  font-size: 12px;
+`;
+
+const S_Comment = styled.div`
+  text-align: right;
+  font-size: 12px;
+  width: 70px;
+  flex-shrink: 0;
 `;
