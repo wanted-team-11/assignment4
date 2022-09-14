@@ -36,7 +36,7 @@
 
 <br />
 
-> 배포링크
+> https://team-11-github-issues.netlify.app/
 
 <br />
 <br />
