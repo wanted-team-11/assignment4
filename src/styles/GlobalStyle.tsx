@@ -21,12 +21,10 @@ const GlobalStyle = createGlobalStyle`
     * {
         box-sizing: border-box;
         font-family: sans-serif;
-        padding: 0;
-        margin: 0;
     }
 
-    li {
-        list-style: none;
+    body {
+        margin: 0;
     }
 
     a {
