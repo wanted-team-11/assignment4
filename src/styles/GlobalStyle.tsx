@@ -15,6 +15,7 @@ export const StyleVariables = {
   listInfoItemFontSize: smallFont,
   listCommentFontSize: smallFont,
   listCommentFontColor: muted,
+  inlineCodeBackgroundColor: "#6e768166",
 };
 
 const GlobalStyle = createGlobalStyle`
@@ -23,6 +24,7 @@ const GlobalStyle = createGlobalStyle`
         font-family: sans-serif;
         padding: 0;
         margin: 0;
+        color: white;
     }
 
     li {
