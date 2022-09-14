@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Spinner from "../assets/Spinner.gif";
 import { AssignmentContext } from "../context";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const IssueDetailPage = () => {
   const { number } = useParams();
@@ -39,10 +41,21 @@ const IssueDetailPage = () => {
                 {new Date(created_at || "").getDate()}일
               </S_Describe>
             </div>
+<<<<<<< HEAD
             <S_Comment>코멘트: {comments}</S_Comment>
           </S_Wrapper>
           <div>{body}</div>
         </S_Container>
+=======
+            <div>코멘트: {issueDetail?.comments}</div>
+          </Wrapper>
+          {issueDetail && (
+            <ReactMarkdown remarkPlugins={[remarkGfm]} skipHtml={true}>
+              {issueDetail.body}
+            </ReactMarkdown>
+          )}
+        </Container>
+>>>>>>> 34cb490658978f7b0000f1ef86e90d3df881d873
       )}
       ;
     </>
