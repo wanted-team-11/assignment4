@@ -139,12 +139,26 @@
     - 외부 API 통신 (Github) - axios 사용
     - 외부 데이터 state (Issue list, Issue Detail)
     - 데이터 로딩상태, 에러상태, 헤더 텍스트 등
+
+
+https://user-images.githubusercontent.com/16061038/190247218-2c061ac4-36b5-4f41-a45d-0c17eeb35bda.mov
+
+
 - 이슈 목록 화면
   - 최초 30개 데이터를 받아 map으로 보여줘야 할 리스트 렌더링
   - `div`태그를 하나 제작해 스크롤 바닥 도달 감지 역할 부여 (옵저버)
   - 스크롤 맨 밑으로 도달할 때마다 다음 30개 데이터 요청 및 리스트에 추가 & 렌더링
     - 옵져버가 감지 될 때마다 page값 1씩 올려 API의 parameter에 담아 요청
   - 매 로딩 시 spinner 이미지 화면하단에 삽입
+
+
+
+
+https://user-images.githubusercontent.com/16061038/190248687-76d9804a-679a-478e-ac84-56e03e0bd090.mov
+
+
+
+
 - 이슈 상세 화면
   - 이슈 상세 id(useParam) 받아 이슈 상세 정보 요청 및 렌더링
     - 이슈 목록 페이지에서 정보를 넘겨줄 경우 새로고침시 데이터가 날아가므로, 대신 상세정보를 새로 요청하도록 구현
