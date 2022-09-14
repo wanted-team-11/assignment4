@@ -1,7 +1,9 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import IssueListIssueItem from "../components/IssueListIssueItem";
 import { AssignmentContext } from "../context";
+import * as S from "./style/IssueListPage.styled";
+import LogoImg from "../assets/things-flow-logo.png";
 
 const IssueListPage = () => {
   const navigate = useNavigate();
@@ -16,14 +18,15 @@ const IssueListPage = () => {
 
   const [pg, setPg] = useState(1);
 
-  const handleObserver = (
+  const handleObserver = async (
     entries: IntersectionObserverEntry[],
     observer: IntersectionObserver
   ) => {
     const target = entries[0];
     if (target.isIntersecting) {
-      getListByPageNumber(pg);
+      observer.unobserve(bottomLoader.current as HTMLDivElement);
       setPg((prev) => prev + 1);
+      await getListByPageNumber(pg);
     }
   };
 
@@ -37,20 +40,30 @@ const IssueListPage = () => {
     if (bottomLoader.current) {
       observer.observe(bottomLoader.current);
     }
-  }, []);
+    return () => {
+      observer && observer.disconnect();
+    };
+  }, [handleObserver]);
 
   return (
     <>
-      <ul>
-        {issueList.map((issue, index) => (
-          <IssueListIssueItem
-            // key={issue.number}
-            key={index}
-            issue={issue}
-            onClickGoDetailPage={onClickGoDetailPage}
-          />
-        ))}
-      </ul>
+      <S.IssueListContainer>
+        {issueList.map((issue, index) => {
+          return (
+            <Fragment key={issue.number}>
+              {index === 4 && (
+                <S.AdItem>
+                  <img src={LogoImg} alt="ad" />
+                </S.AdItem>
+              )}
+              <IssueListIssueItem
+                issue={issue}
+                onClickGoDetailPage={onClickGoDetailPage}
+              />
+            </Fragment>
+          );
+        })}
+      </S.IssueListContainer>
       {isLoading === false && (
         <div
           style={{

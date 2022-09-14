@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { CommentIcon, TargetIcon } from "../assets";
 import { Issue } from "../types";
 import * as S from "./style/IssueListIssueItem.styled";
 
@@ -28,19 +29,23 @@ const IssueListIssueItem = ({
     <S.IssueItemContainer onClick={onClickIssueItem}>
       <S.LeftBox>
         <S.TitleItem>
-          <S.IssueNumber>#{number}</S.IssueNumber>
-          <S.IssueTitle>{title}</S.IssueTitle>
+          <S.IssueTitle>
+            <TargetIcon />
+            <S.IssueTitleText>{title}</S.IssueTitleText>
+          </S.IssueTitle>
         </S.TitleItem>
 
         <S.IssueInfoItem>
-          <S.Author>작성자: {login}</S.Author>
-          {/* // "2022-08-11T07:08:46Z" */}
-          <S.Date>작성일: {createdAt}</S.Date>
+          <S.Author>
+            #{number} opened on {createdAt} by {login}
+          </S.Author>
         </S.IssueInfoItem>
       </S.LeftBox>
 
       <S.RightBox>
-        <S.CommentCount>코멘트: {comments}</S.CommentCount>
+        <S.CommentCount>
+          <CommentIcon /> {comments}
+        </S.CommentCount>
       </S.RightBox>
     </S.IssueItemContainer>
   );
