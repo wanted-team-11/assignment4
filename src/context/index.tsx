@@ -6,17 +6,23 @@ const API_TOKEN = process.env.REACT_APP_API_TOKEN;
 
 interface AssignmentContextProps {
   isLoading: boolean;
-  getListByPageNumber: (pageNum: string) => void;
+  getListByPageNumber: (pageNumber: number) => Promise<void>;
   issueList: Issue[];
   getIssueDetail: (issueNum: string) => void;
   issueDetail: Issue | undefined;
+  getNextListPage: () => void;
+  pageNum: number;
+  setPage: (num: number) => void;
 }
 export const AssignmentContext = createContext<AssignmentContextProps>({
   isLoading: false,
-  getListByPageNumber: (pageNum: string) => {},
+  getListByPageNumber: (pageNumber: number) => Promise.resolve(),
   issueList: [],
   getIssueDetail: (issueNum: string) => {},
   issueDetail: undefined,
+  getNextListPage: () => {},
+  pageNum: 0,
+  setPage: (num: number) => {},
 });
 
 const axiosInstance = axios.create({
@@ -27,7 +33,8 @@ const axiosInstance = axios.create({
 });
 
 const ContextProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [pageNum, setPageNum] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [issueList, setIssueList] = useState<Issue[]>([]);
   const [issueDetail, setIssueDetail] = useState<Issue>();
 
@@ -43,14 +50,24 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const getListByPageNumber = async (pageNumber: string) => {
+  const setPage = (val: number) => {
+    setPageNum(val);
+  };
+
+  const getNextListPage = () => {
+    setPageNum((prevNum) => prevNum + 1);
+  };
+
+  const getListByPageNumber = async (pageNumber: number) => {
     try {
+      setPageNum((prevNum) => prevNum + 1);
       setIsLoading(true);
-      const response = await axiosInstance.get(
+      const response = await axiosInstance.get<Issue[]>(
         `issues?sort=comments&page=${pageNumber}`
       );
-      setIssueList(response.data);
+      setIssueList((prev) => [...prev, ...response.data]);
     } catch (e) {
+      console.error(e);
     } finally {
       setIsLoading(false);
     }
@@ -62,6 +79,9 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
     issueList,
     getIssueDetail,
     issueDetail,
+    getNextListPage,
+    pageNum,
+    setPage,
   };
 
   return (
