@@ -10,8 +10,6 @@ const Header = () => {
   //   getListByPageNumber("1");
   // }, []);
 
-  console.log(issueList);
-
   return (
     <>
       <HeaderContainer>
