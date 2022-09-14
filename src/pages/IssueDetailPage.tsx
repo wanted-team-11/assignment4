@@ -1,13 +1,14 @@
-import { useEffect, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { AssignmentContext } from "../context";
+import { useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Spinner from "../assets/Spinner.gif";
+import { AssignmentContext } from "../context";
 
 const IssueDetailPage = () => {
   const { number } = useParams();
   const { getIssueDetail, issueDetail, isLoading } =
     useContext(AssignmentContext);
+
   useEffect(() => {
     if (number) {
       getIssueDetail(number);
