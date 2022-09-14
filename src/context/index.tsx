@@ -1,22 +1,34 @@
-import { useState, createContext, useEffect, ReactNode } from "react";
+import {
+  useState,
+  createContext,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from "react";
 import { Issue } from "../types";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 const API_TOKEN = process.env.REACT_APP_API_TOKEN;
 
 interface AssignmentContextProps {
   isLoading: boolean;
-  getListByPageNumber: (pageNum: string) => void;
+  getListByPageNumber: (pageNumber: number) => Promise<void>;
   issueList: Issue[];
   getIssueDetail: (issueNum: string) => void;
   issueDetail: Issue | undefined;
+  getNextListPage: () => void;
+  pageNum: number;
+  setPage: (num: number) => void;
 }
 export const AssignmentContext = createContext<AssignmentContextProps>({
   isLoading: false,
-  getListByPageNumber: (pageNum: string) => {},
+  getListByPageNumber: (pageNumber: number) => Promise.resolve(),
   issueList: [],
   getIssueDetail: (issueNum: string) => {},
   issueDetail: undefined,
+  getNextListPage: () => {},
+  pageNum: 0,
+  setPage: (num: number) => {},
 });
 
 const axiosInstance = axios.create({
@@ -27,16 +39,16 @@ const axiosInstance = axios.create({
 });
 
 const ContextProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [pageNum, setPageNum] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [issueList, setIssueList] = useState<Issue[]>([]);
   const [issueDetail, setIssueDetail] = useState<Issue>();
 
   const getIssueDetail = async (issueNumber: string) => {
     try {
       setIsLoading(true);
-      const data = (await axiosInstance.get(`issues/${issueNumber}`)) as Issue;
-      console.log(data);
-      setIssueDetail(data);
+      const response = await axiosInstance.get(`issues/${issueNumber}`);
+      setIssueDetail(response.data);
     } catch (e) {
       console.error(e);
     } finally {
@@ -44,40 +56,28 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const getListByPageNumber = async (pageNumber: string) => {
+  const setPage = (val: number) => {
+    setPageNum(val);
+  };
+
+  const getNextListPage = () => {
+    setPageNum((prevNum) => prevNum + 1);
+  };
+
+  const getListByPageNumber = async (pageNumber: number) => {
     try {
+      setPageNum((prevNum) => prevNum + 1);
       setIsLoading(true);
-      const data = (await axiosInstance.get(
+      const response = await axiosInstance.get<Issue[]>(
         `issues?sort=comments&page=${pageNumber}`
-        ///repos/{owner}/{repo}/issues/{issue_number}
-      )) as Issue[];
+      );
+      setIssueList((prev) => [...prev, ...response.data]);
     } catch (e) {
+      console.error(e);
     } finally {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    axiosInstance.interceptors.request.use(
-      (config) => {
-        setIsLoading(true);
-        return { ...config, headers: { Authorization: `Bearer ${API_TOKEN}` } };
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-
-    axiosInstance.interceptors.response.use(
-      (response: AxiosResponse<Issue[]>) => {
-        setIsLoading(false);
-        setIssueList(response.data);
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-  }, []);
 
   const value = {
     isLoading,
@@ -85,6 +85,9 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
     issueList,
     getIssueDetail,
     issueDetail,
+    getNextListPage,
+    pageNum,
+    setPage,
   };
 
   return (
