@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Spinner from "../assets/Spinner.gif";
 import { AssignmentContext } from "../context";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const IssueDetailPage = () => {
   const { number } = useParams();
@@ -36,7 +38,11 @@ const IssueDetailPage = () => {
             </div>
             <div>코멘트: {issueDetail?.comments}</div>
           </Wrapper>
-          <div>{issueDetail?.body}</div>
+          {issueDetail && (
+            <ReactMarkdown remarkPlugins={[remarkGfm]} skipHtml={true}>
+              {issueDetail.body}
+            </ReactMarkdown>
+          )}
         </Container>
       )}
       ;
