@@ -36,6 +36,7 @@ const Markdown = ({ content }: { content: string }) => {
 export default Markdown;
 
 const S_Code = styled.code`
+  background-color: ${StyleVariables.inlineCodeBackgroundColor};
   border-radius: 6px;
   padding: 0.2em 0.4em;
   font-size: 85%;
