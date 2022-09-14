@@ -15,12 +15,14 @@ export const StyleVariables = {
   listInfoItemFontSize: smallFont,
   listCommentFontSize: smallFont,
   listCommentFontColor: muted,
+  inlineCodeBackgroundColor: "#6e768166",
 };
 
 const GlobalStyle = createGlobalStyle`
     * {
         box-sizing: border-box;
         font-family: sans-serif;
+        color: white;
     }
 
     body {
