@@ -14,6 +14,15 @@ const IssueDetailPage = () => {
 
   const { user, title, created_at, comments, body } = issueDetail || {};
 
+  const markdownOptions = {
+    pre: ({ ...props }) => (
+      <S_MultiCodeWrapper>
+        <pre {...props} />
+      </S_MultiCodeWrapper>
+    ),
+    code: ({ ...props }) => <S_Code {...props} />,
+  };
+
   useEffect(() => {
     if (number) {
       getIssueDetail(number);
@@ -46,19 +55,12 @@ const IssueDetailPage = () => {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             skipHtml={true}
-            components={{
-              code: ({ node, ...props }) => (
-                <S_CodeWrapper>
-                  <code {...props} />
-                </S_CodeWrapper>
-              ),
-            }}
+            components={markdownOptions}
           >
             {body || ""}
           </ReactMarkdown>
         </S_Container>
       )}
-      ;
     </>
   );
 };
@@ -112,8 +114,18 @@ const S_Comment = styled.div`
   flex-shrink: 0;
 `;
 
-const S_CodeWrapper = styled.div`
+const S_MultiCodeWrapper = styled.div`
   background-color: #f6f8fa;
   overflow: auto;
   padding: 16px;
+  code {
+    background-color: #f6f8fa;
+  }
+`;
+
+const S_Code = styled.code`
+  background-color: #eff1f3;
+  border-radius: 6px;
+  padding: 0.2em 0.4em;
+  font-size: 85%;
 `;
