@@ -34,9 +34,8 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
   const getIssueDetail = async (issueNumber: string) => {
     try {
       setIsLoading(true);
-      const data = (await axiosInstance.get(`issues/${issueNumber}`)) as Issue;
-      console.log(data);
-      setIssueDetail(data);
+      const response = await axiosInstance.get(`issues/${issueNumber}`);
+      setIssueDetail(response.data);
     } catch (e) {
       console.error(e);
     } finally {
