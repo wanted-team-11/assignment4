@@ -4,16 +4,13 @@ import styled from "styled-components";
 import { StyleVariables } from "../styles/GlobalStyle";
 
 const Header = () => {
-  const { getListByPageNumber, issueList, isLoading } =
+  const { getListByPageNumber, headerTitle, isLoading } =
     useContext(AssignmentContext);
 
   return (
     <>
       <HeaderContainer>
-        <HeaderTitle>
-          {issueList[0] &&
-            issueList[0].repository_url.split("https://api.github.com/repos/")}
-        </HeaderTitle>
+        <HeaderTitle>{headerTitle}</HeaderTitle>
       </HeaderContainer>
       <Padding />
     </>

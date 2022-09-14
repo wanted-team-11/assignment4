@@ -3,31 +3,40 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Spinner from "../assets/Spinner.gif";
 import { AssignmentContext } from "../context";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { StyleVariables } from "../styles/GlobalStyle";
+import Markdown from "../components/Markdown";
 
 const IssueDetailPage = () => {
   const { number } = useParams();
 
-  const { getIssueDetail, issueDetail, isLoading } =
+  const { getIssueDetail, issueDetail, isLoading, setHeader, isError } =
     useContext(AssignmentContext);
 
-  const { user, title, created_at, comments, body } = issueDetail || {};
+  const { user, title, created_at, comments, body, repository_url } =
+    issueDetail || {};
 
-  const markdownOptions = {
-    pre: ({ ...props }) => (
-      <S_MultiCodeWrapper>
-        <pre {...props} />
-      </S_MultiCodeWrapper>
-    ),
-    code: ({ ...props }) => <S_Code {...props} />,
-  };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const headerTitle = repository_url
+    ?.split("https://api.github.com/repos/")
+    .join("");
+  useEffect(() => {
+    if (headerTitle) {
+      setHeader(headerTitle);
+    }
+  }, [setHeader]);
 
   useEffect(() => {
     if (number) {
       getIssueDetail(number);
     }
   }, []);
+
+  if (isError) {
+    return <div>Oops, something went wrong...</div>;
+  }
 
   return (
     <>
@@ -52,13 +61,7 @@ const IssueDetailPage = () => {
             </div>
             <S_Comment>코멘트: {comments}</S_Comment>
           </S_Wrapper>
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            skipHtml={true}
-            components={markdownOptions}
-          >
-            {body || ""}
-          </ReactMarkdown>
+          {typeof body === "string" && <Markdown content={body} />}
         </S_Container>
       )}
     </>
@@ -82,6 +85,9 @@ const S_LoadingImage = styled.img`
 const S_Container = styled.div`
   max-width: 768px;
   margin: 0 auto;
+  padding: 0 15px;
+  background-color: ${StyleVariables.lighterBackgroundColor};
+  min-height: 100vh;
 `;
 
 const S_Wrapper = styled.div`
@@ -114,17 +120,8 @@ const S_Comment = styled.div`
   flex-shrink: 0;
 `;
 
-const S_MultiCodeWrapper = styled.div`
-  background-color: #f6f8fa;
-  overflow: auto;
-  padding: 16px;
-  code {
-    background-color: #f6f8fa;
-  }
-`;
-
 const S_Code = styled.code`
-  background-color: #eff1f3;
+  background-color: ${StyleVariables.inlineCodeBackgroundColor};
   border-radius: 6px;
   padding: 0.2em 0.4em;
   font-size: 85%;

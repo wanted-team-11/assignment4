@@ -7,22 +7,28 @@ const API_TOKEN = process.env.REACT_APP_API_TOKEN;
 interface AssignmentContextProps {
   isLoading: boolean;
   getListByPageNumber: (pageNumber: number) => Promise<void>;
+  getNextPageList: () => void;
   issueList: Issue[];
   getIssueDetail: (issueNum: string) => void;
   issueDetail: Issue | undefined;
-  getNextListPage: () => void;
   pageNum: number;
-  setPage: (num: number) => void;
+  headerTitle: string;
+  setHeader: (headerText: string) => void;
+  isNoMore: boolean;
+  isError: boolean;
 }
 export const AssignmentContext = createContext<AssignmentContextProps>({
   isLoading: false,
   getListByPageNumber: (pageNumber: number) => Promise.resolve(),
+  getNextPageList: () => {},
   issueList: [],
   getIssueDetail: (issueNum: string) => {},
   issueDetail: undefined,
-  getNextListPage: () => {},
   pageNum: 0,
-  setPage: (num: number) => {},
+  headerTitle: "",
+  setHeader: (headerText: string) => {},
+  isNoMore: false,
+  isError: false,
 });
 
 const axiosInstance = axios.create({
@@ -37,6 +43,9 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [issueList, setIssueList] = useState<Issue[]>([]);
   const [issueDetail, setIssueDetail] = useState<Issue>();
+  const [headerTitle, setHeaderTitle] = useState("");
+  const [isNoMore, setIsNoMore] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const getIssueDetail = async (issueNumber: string) => {
     try {
@@ -45,17 +54,17 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
       setIssueDetail(response.data);
     } catch (e) {
       console.error(e);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const setPage = (val: number) => {
-    setPageNum(val);
-  };
-
-  const getNextListPage = () => {
-    setPageNum((prevNum) => prevNum + 1);
+  const getNextPageList = () => {
+    if (!isNoMore) {
+      getListByPageNumber(pageNum + 1);
+      setPageNum(pageNum + 1);
+    }
   };
 
   const getListByPageNumber = async (pageNumber: number) => {
@@ -65,23 +74,34 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
       const response = await axiosInstance.get<Issue[]>(
         `issues?sort=comments&page=${pageNumber}`
       );
+      if (response.data.length === 0) {
+        setIsNoMore(true);
+      }
       setIssueList((prev) => [...prev, ...response.data]);
     } catch (e) {
       console.error(e);
+      setIsError(true);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const setHeader = (headerText: string) => {
+    setHeaderTitle(headerText);
+  };
+
   const value = {
     isLoading,
     getListByPageNumber,
+    getNextPageList,
     issueList,
     getIssueDetail,
     issueDetail,
-    getNextListPage,
     pageNum,
-    setPage,
+    headerTitle,
+    setHeader,
+    isNoMore,
+    isError,
   };
 
   return (

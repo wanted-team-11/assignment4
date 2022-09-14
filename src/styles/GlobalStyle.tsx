@@ -16,27 +16,29 @@ export const StyleVariables = {
   listCommentFontSize: smallFont,
   listCommentFontColor: muted,
   inlineCodeBackgroundColor: "#6e768166",
+  BlockCodeBackgroundColor: "#161b22",
 };
 
 const GlobalStyle = createGlobalStyle`
-    * {
-        box-sizing: border-box;
-        font-family: sans-serif;
-        color: white;
-    }
+  * {
+    box-sizing: border-box;
+    font-family: sans-serif;
+    color: white;
+  }
 
-    body {
-        margin: 0;
-    }
+  body {
+    margin: 0;
+    background-color: ${StyleVariables.backgroundColor};
+  }
 
-    a {
-        text-decoration: none;
-    }
+  a {
+    text-decoration: none;
+  }
 
-    button {
-        background: none;
-        border: none;
-    }
+  button {
+    background: none;
+    border: none;
+  }
 `;
 
 export default GlobalStyle;
