@@ -3,6 +3,8 @@ import { StyleVariables } from "../../styles/GlobalStyle";
 
 export const IssueListContainer = styled.ul`
   background: ${StyleVariables.backgroundColor};
+  margin: 0;
+  padding: 10px 0 0;
 `;
 
 export const AdItem = styled.li`
