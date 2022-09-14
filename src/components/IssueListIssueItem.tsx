@@ -51,12 +51,6 @@ const IssueListIssueItem = ({
   );
 };
 
-// Issue 번호 : number
-// Issue 작성자: user.login
-// Issue 타이틀: title
-// Issue 작성일: created_at
-// Issue 코멘트 수: comments
-
 export default IssueListIssueItem;
 
 const S_IssueItemContainer = styled.li`

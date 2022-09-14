@@ -22,6 +22,7 @@ const IssueDetailPage = () => {
   const headerTitle = repository_url
     ?.split("https://api.github.com/repos/")
     .join("");
+
   useEffect(() => {
     if (headerTitle) {
       setHeader(headerTitle);
@@ -88,6 +89,9 @@ const S_Container = styled.div`
   padding: 0 15px;
   background-color: ${StyleVariables.lighterBackgroundColor};
   min-height: 100vh;
+  img {
+    max-width: 100%;
+  }
 `;
 
 const S_Wrapper = styled.div`
