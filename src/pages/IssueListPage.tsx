@@ -5,22 +5,16 @@ import { AssignmentContext } from "../context";
 
 const IssueListPage = () => {
   const navigate = useNavigate();
-  const {
-    isLoading,
-    getListByPageNumber,
-    getNextListPage,
-    issueList,
-    pageNum,
-    setPage,
-  } = useContext(AssignmentContext);
+  const { isLoading, getListByPageNumber, issueList } =
+    useContext(AssignmentContext);
 
   const onClickGoDetailPage = (issueNumber: number) => {
     navigate(`/issue-detail/${issueNumber}`);
   };
-  const [pg, setPg] = useState(1);
-  console.log("pg: ", pg);
 
   const bottomLoader = useRef<HTMLDivElement>(null);
+
+  const [pg, setPg] = useState(1);
 
   const handleObserver = (
     entries: IntersectionObserverEntry[],
@@ -28,8 +22,6 @@ const IssueListPage = () => {
   ) => {
     const target = entries[0];
     if (target.isIntersecting) {
-      console.log("intersecting");
-      // observer.unobserve(bottomLoader.current as HTMLDivElement);
       getListByPageNumber(pg);
       setPg((prev) => prev + 1);
     }
@@ -45,7 +37,7 @@ const IssueListPage = () => {
     if (bottomLoader.current) {
       observer.observe(bottomLoader.current);
     }
-  }, [handleObserver]);
+  }, []);
 
   return (
     <>

@@ -1,10 +1,4 @@
-import {
-  useState,
-  createContext,
-  useEffect,
-  ReactNode,
-  useCallback,
-} from "react";
+import { useState, createContext, ReactNode } from "react";
 import { Issue } from "../types";
 import axios from "axios";
 
