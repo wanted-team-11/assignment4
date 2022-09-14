@@ -1,4 +1,4 @@
-import { useState, createContext, ReactNode } from "react";
+import { useState, createContext, ReactNode, useCallback } from "react";
 import { Issue } from "../types";
 import axios from "axios";
 
@@ -47,7 +47,7 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
   const [isNoMore, setIsNoMore] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const getIssueDetail = async (issueNumber: string) => {
+  const getIssueDetail = useCallback(async (issueNumber: string) => {
     try {
       setIsLoading(true);
       const response = await axiosInstance.get(`issues/${issueNumber}`);
@@ -58,7 +58,7 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const getNextPageList = () => {
     if (!isNoMore) {
@@ -67,9 +67,8 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const getListByPageNumber = async (pageNumber: number) => {
+  const getListByPageNumber = useCallback(async (pageNumber: number) => {
     try {
-      setPageNum((prevNum) => prevNum + 1);
       setIsLoading(true);
       const response = await axiosInstance.get<Issue[]>(
         `issues?sort=comments&page=${pageNumber}`
@@ -84,7 +83,7 @@ const ContextProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   const setHeader = (headerText: string) => {
     setHeaderTitle(headerText);

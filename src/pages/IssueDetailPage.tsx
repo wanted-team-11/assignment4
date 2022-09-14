@@ -26,13 +26,13 @@ const IssueDetailPage = () => {
     if (headerTitle) {
       setHeader(headerTitle);
     }
-  }, [setHeader]);
+  }, [setHeader, headerTitle]);
 
   useEffect(() => {
     if (number) {
       getIssueDetail(number);
     }
-  }, []);
+  }, [getIssueDetail, number]);
 
   if (isError) {
     return <div>Oops, something went wrong...</div>;
@@ -118,11 +118,4 @@ const S_Comment = styled.div`
   font-size: 12px;
   width: 70px;
   flex-shrink: 0;
-`;
-
-const S_Code = styled.code`
-  background-color: ${StyleVariables.inlineCodeBackgroundColor};
-  border-radius: 6px;
-  padding: 0.2em 0.4em;
-  font-size: 85%;
 `;

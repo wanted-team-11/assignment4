@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import IssueListIssueItem from "../components/IssueListIssueItem";
 import { AssignmentContext } from "../context";
@@ -11,7 +11,6 @@ const IssueListPage = () => {
   const navigate = useNavigate();
   const {
     isLoading,
-    getListByPageNumber,
     issueList,
     setHeader,
     isNoMore,
@@ -27,7 +26,7 @@ const IssueListPage = () => {
     if (headerTitle) {
       setHeader(headerTitle);
     }
-  }, [setHeader]);
+  }, [setHeader, headerTitle]);
 
   const onClickGoDetailPage = (issueNumber: number) => {
     navigate(`/issue-detail/${issueNumber}`);
@@ -35,23 +34,20 @@ const IssueListPage = () => {
 
   const bottomLoader = useRef<HTMLDivElement>(null);
 
-  const [pg, setPg] = useState(1);
-
-  const handleObserver = (
-    entries: IntersectionObserverEntry[],
-    observer: IntersectionObserver
-  ) => {
-    const target = entries[0];
-    if (target.isIntersecting && !isLoading) {
-      observer.unobserve(bottomLoader.current as HTMLDivElement);
-      if (isNoMore) {
-        observer.disconnect();
-        return;
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+      const target = entries[0];
+      if (target.isIntersecting && !isLoading) {
+        observer.unobserve(bottomLoader.current as HTMLDivElement);
+        if (isNoMore) {
+          observer.disconnect();
+          return;
+        }
+        getNextPageList();
       }
-      setPg((prev) => prev + 1);
-      getNextPageList();
-    }
-  };
+    },
+    [isLoading, isNoMore, getNextPageList]
+  );
 
   useEffect(() => {
     const option = {

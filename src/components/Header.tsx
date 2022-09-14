@@ -1,11 +1,10 @@
 import { AssignmentContext } from "../context";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import styled from "styled-components";
 import { StyleVariables } from "../styles/GlobalStyle";
 
 const Header = () => {
-  const { getListByPageNumber, headerTitle, isLoading } =
-    useContext(AssignmentContext);
+  const { headerTitle } = useContext(AssignmentContext);
 
   return (
     <>
