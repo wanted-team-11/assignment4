@@ -2,8 +2,6 @@ import { useState, createContext, ReactNode, useCallback } from "react";
 import { Issue } from "../types";
 import axios from "axios";
 
-const API_TOKEN = process.env.REACT_APP_API_TOKEN;
-
 interface AssignmentContextProps {
   isLoading: boolean;
   getListByPageNumber: (pageNumber: number) => Promise<void>;
@@ -33,9 +31,6 @@ export const AssignmentContext = createContext<AssignmentContextProps>({
 
 const axiosInstance = axios.create({
   baseURL: "https://api.github.com/repos/angular/angular-cli/",
-  headers: {
-    Authorization: `Bearer ${API_TOKEN}`,
-  },
 });
 
 const ContextProvider = ({ children }: { children: ReactNode }) => {
